@@ -1,0 +1,6 @@
+{
+  "name": "Happy Kids Zone - هابي كيدز زون",
+  "description": "منيو رقمي مبهج وعصري لمطعم Happy Kids Zone مستوحى من ألوان الشعار الساحرة مع بوابة تحكم للمدير لإدارة الأصناف وتعديل الأسعار",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
