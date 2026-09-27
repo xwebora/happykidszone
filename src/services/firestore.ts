@@ -1,4 +1,3 @@
-```ts
 import {
   doc,
   getDoc,
@@ -79,9 +78,7 @@ export async function loadMenuData() {
    SAVE MENU ITEMS
 ========================================================= */
 
-export async function saveMenuItems(
-  items: MenuItem[]
-) {
+export async function saveMenuItems(items: MenuItem[]) {
   await setDoc(
     menuRef,
     {
@@ -98,9 +95,7 @@ export async function saveMenuItems(
    SAVE CATEGORIES
 ========================================================= */
 
-export async function saveCategories(
-  categories: Category[]
-) {
+export async function saveCategories(categories: Category[]) {
   await setDoc(
     categoriesRef,
     {
@@ -120,11 +115,6 @@ export async function saveCategories(
 export async function saveRestaurant(
   restaurant: RestaurantInfo
 ) {
-  /*
-   * لا نحفظ اسم المستخدم وكلمة المرور
-   * داخل Firestore.
-   */
-
   const publicRestaurant = {
     name: restaurant.name,
     nameEn: restaurant.nameEn,
@@ -163,9 +153,7 @@ export async function saveRestaurant(
    SAVE HERO
 ========================================================= */
 
-export async function saveHero(
-  hero: HeroConfig
-) {
+export async function saveHero(hero: HeroConfig) {
   await setDoc(
     heroRef,
     {
@@ -177,4 +165,3 @@ export async function saveHero(
     }
   );
 }
-```
