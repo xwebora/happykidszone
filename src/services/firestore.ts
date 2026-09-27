@@ -1,9 +1,8 @@
-import { initializeApp } from 'firebase/app';
 import {
-  getFirestore,
   doc,
   getDoc,
   setDoc,
+  serverTimestamp,
 } from 'firebase/firestore';
 
 import {
@@ -13,83 +12,220 @@ import {
   HeroConfig,
 } from '../types';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyBAx7elXXGk7M16vO5NjlDC2GhWpfBQCAg',
-  authDomain: 'gen-lang-client-0738987991.firebaseapp.com',
-  projectId: 'gen-lang-client-0738987991',
-  storageBucket: 'gen-lang-client-0738987991.firebasestorage.app',
-  messagingSenderId: '565566228036',
-  appId: '1:565566228036:web:4b1842685a2fbca8839e11',
-};
+import { db } from './firebase';
 
-const app = initializeApp(firebaseConfig);
 
-export const db = getFirestore(app);
+/* =========================================================
+   FIRESTORE DOCUMENTS
+========================================================= */
 
-const menuRef = doc(db, 'appData', 'menu');
-const categoriesRef = doc(db, 'appData', 'categories');
-const restaurantRef = doc(db, 'appData', 'restaurant');
-const heroRef = doc(db, 'appData', 'hero');
+const menuRef = doc(
+  db,
+  'appData',
+  'menu'
+);
+
+const categoriesRef = doc(
+  db,
+  'appData',
+  'categories'
+);
+
+const restaurantRef = doc(
+  db,
+  'appData',
+  'restaurant'
+);
+
+const heroRef = doc(
+  db,
+  'appData',
+  'hero'
+);
+
+
+/* =========================================================
+   LOAD ALL DATABASE DATA
+========================================================= */
 
 export async function loadMenuData() {
-  const [menuSnap, categoriesSnap, restaurantSnap, heroSnap] =
-    await Promise.all([
-      getDoc(menuRef),
-      getDoc(categoriesRef),
-      getDoc(restaurantRef),
-      getDoc(heroRef),
-    ]);
+
+  const [
+    menuSnap,
+    categoriesSnap,
+    restaurantSnap,
+    heroSnap,
+  ] = await Promise.all([
+
+    getDoc(menuRef),
+
+    getDoc(categoriesRef),
+
+    getDoc(restaurantRef),
+
+    getDoc(heroRef),
+
+  ]);
+
 
   return {
+
     items: menuSnap.exists()
-      ? (menuSnap.data().items as MenuItem[])
+      ? (
+          menuSnap.data()
+            .items as MenuItem[]
+        )
       : null,
+
 
     categories: categoriesSnap.exists()
-      ? (categoriesSnap.data().categories as Category[])
+      ? (
+          categoriesSnap.data()
+            .categories as Category[]
+        )
       : null,
+
 
     restaurant: restaurantSnap.exists()
-      ? (restaurantSnap.data() as RestaurantInfo)
+      ? (
+          restaurantSnap.data()
+        as Partial<RestaurantInfo>
+        )
       : null,
+
 
     hero: heroSnap.exists()
-      ? (heroSnap.data() as HeroConfig)
+      ? (
+          heroSnap.data()
+        as HeroConfig
+        )
       : null,
+
   };
+
 }
 
-export async function saveMenuItems(items: MenuItem[]) {
-  await setDoc(menuRef, {
-    items,
-    updatedAt: new Date(),
-  });
+
+/* =========================================================
+   SAVE MENU ITEMS
+========================================================= */
+
+export async function saveMenuItems(
+  items: MenuItem[]
+) {
+
+  await setDoc(
+
+    menuRef,
+
+    {
+      items,
+
+      updatedAt:
+        serverTimestamp(),
+    },
+
+    {
+      merge: true,
+    }
+
+  );
+
 }
 
-export async function saveCategories(categories: Category[]) {
-  await setDoc(categoriesRef, {
-    categories,
-    updatedAt: new Date(),
-  });
+
+/* =========================================================
+   SAVE CATEGORIES
+========================================================= */
+
+export async function saveCategories(
+  categories: Category[]
+) {
+
+  await setDoc(
+
+    categoriesRef,
+
+    {
+      categories,
+
+      updatedAt:
+        serverTimestamp(),
+    },
+
+    {
+      merge: true,
+    }
+
+  );
+
 }
 
-export async function saveRestaurant(restaurant: RestaurantInfo) {
-  // لا نحفظ بيانات دخول المدير داخل البيانات العامة
+
+/* =========================================================
+   SAVE RESTAURANT
+========================================================= */
+
+export async function saveRestaurant(
+  restaurant: RestaurantInfo
+) {
+
+  /*
+   * مهم:
+   * لا نحفظ اسم المستخدم وكلمة المرور
+   * داخل Firestore العام.
+   */
+
   const {
     adminUsername,
     adminPassword,
     ...publicRestaurant
   } = restaurant;
 
-  await setDoc(restaurantRef, {
-    ...publicRestaurant,
-    updatedAt: new Date(),
-  });
+
+  await setDoc(
+
+    restaurantRef,
+
+    {
+      ...publicRestaurant,
+
+      updatedAt:
+        serverTimestamp(),
+    },
+
+    {
+      merge: true,
+    }
+
+  );
+
 }
 
-export async function saveHero(hero: HeroConfig) {
-  await setDoc(heroRef, {
-    ...hero,
-    updatedAt: new Date(),
-  });
+
+/* =========================================================
+   SAVE HERO
+========================================================= */
+
+export async function saveHero(
+  hero: HeroConfig
+) {
+
+  await setDoc(
+
+    heroRef,
+
+    {
+      ...hero,
+
+      updatedAt:
+        serverTimestamp(),
+    },
+
+    {
+      merge: true,
+    }
+
+  );
+
 }
