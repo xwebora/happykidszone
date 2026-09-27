@@ -292,7 +292,7 @@ export default function App() {
 
         const saved =
           localStorage.getItem(STORAGE_KEY_LAYOUT)
-          as MenuLayoutMode;
+          const savedLayout = localStorage.getItem('menuLayout') as MenuLayoutMode;
 
         return (
           saved === 'grid' ||
